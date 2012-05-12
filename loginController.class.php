@@ -2,6 +2,7 @@
 /**
  *  Requires that the SessionController class be available 
  *  and config.php be loaded
+ *  Implements a singleton pattern so we can just have 1 login controller for any one request
  */
  
  /* DB TABLE FOR USERS
@@ -25,10 +26,24 @@ class LoginController {
   private $db;
   private $user = FALSE;
   
-  public function __construct(){
-    load_class('sessionController');
-    $this->sessionController = new SessionController();
+  /**
+   *  Private to force singleton
+   */
+  private function __construct(){
+    $class = load_class('sessionController');
+    $this->sessionController = new $class();
     $this->db = getDB();
+
+  }
+
+  /**
+   *  Get the active instance of the singleton
+   */
+  public static function instance() {
+    if (empty(self::$instance)) {
+      self::$instance = new Dispatcher();
+    }
+    return self::$instance;
   }
   
   /**

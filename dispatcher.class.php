@@ -59,7 +59,7 @@ class Dispatcher {
     } else {
       //return a 404 if we couldn't find the handler
       header("HTTP/1.0 404 Not Found");
-      $response = 'SadFace, we couldn\'t find that page.  We\'ll keep looking, but you might want to hit the back button.';
+      $response = 'SadFace, we couldn\'t find <em>' . $request . '</em>.  We\'ll keep looking, but you might want to hit the back button.';
     }
 
     echo $response;

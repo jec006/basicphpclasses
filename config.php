@@ -3,16 +3,16 @@
 session_start();
 
 //database config
-$db_user='imagemap';
-$db_pass='34dvfda93';
+$db_user='';
+$db_pass='';
 $db_host='localhost';
-$db_name='imagemap';
-//Domain name
-$domain='imagemap.jec006.com';
+$db_name='';
+//Domain name, like jec006.com
+$domain='';
 //Site secret for use in hashing passwords
 //WARNING: do not change this after you have users on your site 
 //this will result in all users being unable to login
-$secret = 'sade%4345ghjyj678#RGH$#@!fsdagr2sdh';
+$secret = 'sdaf3456fvjlday5l$jlka2#@lksdeb-sd';
 
 function getDB(){ 
   global $db_user;
@@ -31,23 +31,20 @@ function getDB(){
  *  A utility function to load the file for a class
  */
 function load_class($name){
-  //get in the right dir
-  $cur = getcwd();
-  chdir('/opt/development/ladd/');
-  
-  if(include_once(get_class_path($name))){
-    $name = strtoupper(substr($name, 0, 1)) . substr($name, 1);
-    chdir($cur);
-    $obj = new $name();
-    return $obj;
-  } else {
-    global $error_queue;
-    $error_queue[] = array('Class File Not Found', 'classes/' . $name . '/' . $name.'.class.php');
-    chdir($cur);    
-    return false;
-  }
+  require_once(get_class_path($name));
+  $name = strtoupper(substr($name, 0, 1)) . substr($name, 1);
+  return $name;
 }
  
 function get_class_path($name){
-  return 'controllers/classes/' . $name . '/' . $name . '.class.php';
+  return dirname(__FILE__) . '/' . $name . '.class.php';
+}
+
+function print_errors() {
+  global $error_queue;
+  echo '<ul class="error-queue">';
+  foreach ($error_queue as $error) {
+    echo '<li class="error">' . $error[0] . '<span class="code">' . $error[1] . '</span><li>';
+  }
+  echo '</ul>';
 }
