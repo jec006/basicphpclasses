@@ -63,8 +63,7 @@ class SessionController {
         return FALSE;
       }
     } else {
-      global $errors_queue;
-      $errors_queue[] = $this->db->error;
+      report_error('Database Error: ', $this->db->error);
       return FALSE;
     }
   }
@@ -84,8 +83,7 @@ class SessionController {
       $session['id'] = $this->db->insert_id;
       return $session;
     } else {
-      global $errors_queue;
-      $errors_queue[] = $this->db->error;
+      report_error('Database Error: ', $this->db->error);
       return FALSE;
     }
   }
@@ -96,8 +94,7 @@ class SessionController {
     if($this->db->query("UPDATE $this->tablename SET expires=$expires")){
       return TRUE;
     } else {
-      global $errors_queue;
-      $errors_queue[] = $result->error;
+      report_error('Database Error: ', $this->db->error);
       return FALSE;
     }
   }
@@ -107,8 +104,7 @@ class SessionController {
     if($this->db->query("DELETE FROM $this->tablename WHERE sid=$sid")){
       return TRUE;
     } else {
-      global $errors_queue;
-      $errors_queue = $this->db->error;
+      report_error('Database Error: ', $this->db->error);
       return FALSE;
     }
   }
@@ -140,8 +136,7 @@ class SessionController {
         return FALSE;
       }
     } else {
-      global $errors_queue;
-      $errors_queue[] = $result->error;
+      report_error('Database Error: ', $this->db->error);
       return FALSE;
     }
   }

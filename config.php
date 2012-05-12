@@ -35,11 +35,26 @@ function load_class($name){
   $name = strtoupper(substr($name, 0, 1)) . substr($name, 1);
   return $name;
 }
- 
+
+/**
+ *  Helper to centralize the config for getting a path and filename for a class
+ */ 
 function get_class_path($name){
   return dirname(__FILE__) . '/' . $name . '.class.php';
 }
 
+/**
+ *  Set an error message to be shown the next time errors are printed
+ */
+function report_error($type, $detail = '') {
+  global $error_queue;
+  $error_queue($type, $detail);
+}
+
+/**
+ *  Retrieve the available errors and print them out
+ *  Generally this will be handled by the request handler
+ */
 function print_errors() {
   global $error_queue;
   echo '<ul class="error-queue">';

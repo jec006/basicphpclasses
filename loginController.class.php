@@ -51,7 +51,6 @@ class LoginController {
    */
   public function checkLoggedIn(){
     $cookie = $this->getCookie();
-    global $errors_queue, $messages;
     if($cookie && $this->checkSession($cookie)){
       $values = $this->getCookieValues($cookie);
       $this->user = $this->loadById($values[1]);
@@ -65,12 +64,9 @@ class LoginController {
         $this->user['sid'] = $session['sid'];
         $this->setCookie();
         $this->destroyResetLink();
-
-        $messages[] = 'Please update your password.';
-        //clear out the get variables
-        redirect('index.php');
+        return TRUE;
       } else {
-        $errors_queue[] = 'Invalid Reset Link';
+        report_error('Invalid Reset Link');
         return FALSE;
       }    
     } else {
@@ -88,12 +84,9 @@ class LoginController {
          
      $this->user['sid'] = $session['sid'];
      $this->setCookie();
-     global $messages;
-     $messages[] = 'Logged in Successfully';
      return TRUE;
    } else {
-     global $errors_queue;
-     $errors_queue[] = 'Login failed';
+     report_error('Login failed');
      return FALSE;
    }
  }
@@ -135,8 +128,7 @@ class LoginController {
       }
       return $users;
     } else {
-      global $errors_queue;
-      $errors_queue[] = $this->db->error;
+      report_error('Database Error: ', $this->db->error);
       return FALSE;
     }
   }
@@ -154,8 +146,7 @@ class LoginController {
   public function saveUser($user){
     //Only allow logged in users to update self or other users
     if(!$this->user){
-      global $errors_queue;
-      $errors_queue[] = 'User not logged in - You may not update users';
+      report_error('User not logged in', 'You may not update users');
       return FALSE;
     }
     
@@ -184,8 +175,7 @@ class LoginController {
         $user['uid'] = $uid;
         return $user;
       } else {
-        global $errors_queue;
-        $errors_queue[] = $this->db->error;
+        report_error('Database Error: ', $this->db->error);
         return FALSE;
       }
     } else {
@@ -208,9 +198,7 @@ class LoginController {
         $user['uid'] = $this->db->insert_id;
         return $user;
       } else {
-        global $errors_queue;
-        $errors_queue[] = $this->db->error;
-        $errors_queue[] = 'Query: ' . $query;
+        report_error('Database Error: ', $this->db->error);
         return FALSE;
       }
     }
@@ -229,8 +217,7 @@ class LoginController {
         $messages[] = 'User successfully deleted';
         return TRUE;
       } else {
-        global $errors_queue;
-        $errors_queue[] = $this->db->error;
+        report_error('Database Error: ', $this->db->error);
         return FALSE;
       }
     }
@@ -352,8 +339,7 @@ class LoginController {
       $user = $result->fetch_assoc();
       return $user;
     } else {
-      global $errors_queue;
-      $errors_queue[] = $this->db->error;
+      report_error('Database Error: ', $this->db->error);
       return FALSE;
     }
   }
@@ -366,8 +352,7 @@ class LoginController {
       $user = $result->fetch_assoc();
       return $user;
     } else {
-      global $errors_queue;
-      $errors_queue[] = $this->db->error;
+      report_error('Database Error: ', $this->db->error);
       return FALSE;
     }
   }
@@ -380,8 +365,7 @@ class LoginController {
       $user = $result->fetch_assoc();
       return $user;
     } else {
-      global $errors_queue;
-      $errors_queue[] = $this->db->error;
+      report_error('Database Error: ', $this->db->error);
       return FALSE;
     }
   }  
